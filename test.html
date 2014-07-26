@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html lang="en-US"  >
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Astroids</title>
+
+    <link rel="stylesheet" href="style/main.css"/>
+    <link rel="stylesheet" href="style/mobile.css"
+        media="screen and (max-device-width: 768px) and (orientation: portrait),
+               screen and (max-device-width: 1024px) and (orientation:landscape)"/>
+
+    <!--icons for apple shortcuts screen-->
+    <!--<link rel="apple-touch-icon"                  href="icon.png"/>-->
+    <link rel="apple-touch-icon-precomposed" href="images/ios-icon.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ios-icon-ipad.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ios-icon-iphone4.png"/>
+
+    <!--images for apple startup images-->
+    <link media="screen and (min-device-width: 768px) and (orientation:landscape)" rel="apple-touch-startup-image"
+          href="images/ios-startup-748x1024.png"/>
+    <link media="screen and (min-device-width: 768px) and (orientation:portrait)" rel="apple-touch-startup-image"
+          href="images/ios-startup-768x1004.png"/>
+    <link media="screen and (max-device-width: 320px)" rel="apple-touch-startup-image"
+          href="images/ios-startup-320x460.png"/>
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+
+
+
+
+    <script src="scripts/game.js"></script>
+    <script>
+        window.addEventListener("load", function () {
+//           if( jewel.isStandalone() ){
+//               jewel.load('scripts/dom.js');
+//               jewel.load('scripts/screen.splash.js');
+//               jewel.load('scripts/input.js');
+//               jewel.load('scripts/screen.main-menu.js');
+//               if( jewel.hasWebWorker() ){
+//                   jewel.preload('scripts/board.worker.js');
+//                   jewel.load('scripts/board.worker-interface.js', jewel.setup);
+//               }else{
+                   game.load('scripts/pices.js');
+                   game.load('scripts/board.js');
+//               }
+//               jewel.load('scripts/screen.game.js');
+//               jewel.load('scripts/display.canvas.js');
+//               jewel.load('scripts/audio.js');
+//               jewel.load('scripts/storage.js');
+//               jewel.load('scripts/screen.high-scores.js');
+//               jewel.load('scripts/screen.about.js');
+
+//           }else{
+//               jewel.load("scripts/screen.install.js",jewel.setup)
+//           }
+        });
+    </script>
+</head>
+<body>
+    <div id="game">
+
+        <!--SPLASH SCREEN-->
+        <div class="screen" id="splash-screen">
+            <h1 class="logo">
+                <span>T</span>
+                <span>e</span>
+                <span>t</span>
+                <span>r</span>
+                <span>i</span>
+                <span>s</span>
+            </h1>
+            <span class="continue">Click to continue</span>
+            <div class="progress">
+                <div class="indicator"></div>
+            </div>
+        </div>
+
+        <!--MENU-->
+        <div class="screen" id="main-menu">
+            <h1 class="logo">
+                <span>T</span>
+                <span>e</span>
+                <span>t</span>
+                <span>r</span>
+                <span>i</span>
+                <span>s</span>
+            </h1>
+            <ul class="menu">
+                <li><button name="game-screen">Play</button></li>
+                <li><button name="high-scores">High score</button></li>
+                <li><button name="about">About</button></li>
+                <li><button name="exit-screen">Exit</button></li>
+            </ul>
+        </div>
+
+        <div class="screen" id="game-screen">
+            <div class="game-board jewel-size">
+                <div class="announcement"></div>
+            </div>
+            <div class="game-info">
+                <label class="level" for="">Level: <span></span></label>
+                <label class="score" for="">Score: <span></span></label>
+                <div class="time progress">
+                    <div class="indicator"></div>
+                </div>
+            </div>
+
+            <footer>
+                <button class="exit">Exit</button>
+                <button class="pause">pause</button>
+                <button class="reset">reset</button>
+            </footer>
+            <div class="pause-overlay">
+                <div class="pause-text">pause</div>
+            </div>
+        </div>
+
+        <div class="screen" id="high-scores">
+            <h2 class="logo">high score</h2>
+            <ol class="score-list"></ol>
+            <footer>
+                <button name="back">Back</button>
+            </footer>
+        </div>
+
+        <div class="screen" id="about">
+            <h3>
+                <a href="https://github.com/perymimon?tab=repositories">pery mimon</a>
+                <address>isreal</address>
+            </h3>
+
+            from the book<span class="book"> HTML5 GAMES</span>
+        </div>
+
+        <div class="screen" id="install-screen">
+            <h1 class="logo">Jewel<br>Warrior</h1>
+            <span>
+                Click the<img icon="" src="images/install-icon.png" alt="install"/>
+                button to install the game to your home screen
+            </span>
+        </div>
+    </div>
+
+</body>
+</html>
