@@ -3,10 +3,10 @@
  */
 system.register(function Pices () {
     var piecesTypes = [];
-    piecesTypes[0] = {
-        type:0,width:2, height:2
+  piecesTypes[0] = {
+        type:7,width:2, height:2
         ,map:[
-            [1,1]
+             [1,1]
             ,[1,1]
         ]
     };
@@ -60,12 +60,13 @@ system.register(function Pices () {
 
     function createPicess( number ){
         if (number >piecesTypes.length){
-            throw new Error('there is no pices from type:'+number);
+            throw new Error('there is no pices from type:' + number);
         }
-        number  =  number || Math.floor( Math.random() * (piecesTypes.length-1) );
+        number  =  number != void 0? number : Math.floor( Math.random() * (piecesTypes.length-1) );
         var picecsType = piecesTypes[number];
         return Object.create(methods, {
-            type: {writable:false, configurable:false, value: number }
+            type: {writable:false, configurable:false, value: picecsType.type }
+            ,index:{writable:false, configurable:false, value: number }
             ,width: {configurable:false, get: function () {
                 return (this.rotation % 2)?
                     picecsType.height : picecsType.width ;
@@ -86,10 +87,10 @@ system.register(function Pices () {
     var methods = {
         getXY:function(x,y){
             var
-                map = piecesTypes[this.type].map
+                map = piecesTypes[this.index].map
                 ,rotate = this.rotation % 4
-                ,width = piecesTypes[this.type].width - 1
-                ,height = piecesTypes[this.type].height - 1
+                ,width = piecesTypes[this.index].width - 1
+                ,height = piecesTypes[this.index].height - 1
                 ;
             switch ( rotate ){
                 case 0: // 0 deg
@@ -127,6 +128,16 @@ system.register(function Pices () {
             }
             return row;
 
+        }
+        ,getColumn:function(x){
+            var col = []
+                ,height = this.height
+                ;
+
+            for( var y=0; y < height; y++ ){
+                row[y] = this.getXY(x,y);
+            }
+            return col;
         }
         ,rotateRight:function(){
             this.rotation = (this.rotation+1) % 4;

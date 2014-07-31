@@ -40,6 +40,15 @@ system.register(function game( $, dom ){
             baseLevelScore: 1500,
             baseLevelTimer : 60000,
             baseLevelExp: 1.05,
+            color:{
+                1:'rgb(131, 9, 110)',
+                2:'rgb(24, 117, 70)',
+                3:'rgb(177, 62, 18)',
+                4:'rgb(126, 126, 26)',
+                5:'rgb(11, 18, 132)',
+                6:'rgb(47, 137, 226)',
+                7:'rgb(226, 116, 18)'
+            },
             controls:{
                 //KEYBOARD
                 KEY_UP:'rotate'

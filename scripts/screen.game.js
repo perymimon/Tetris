@@ -9,50 +9,46 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
         ,paused
         ,pieces
         ,pauseStart
-/*cnst*/,STORAGE_KEY = 'activeGameData'
+/*cnst*/,STORAGE_KEY_GAME_STATE = 'activeGameData'
         ,STORAGE_KEY_LAST_SCORE = 'lastScore'
         ,$pauseOverlay
     ;
 
     gameState = {};
 
-    function startGame(resetState) {
+    function run(){
+        if(firstRun){
+            setup();
+            firstRun = false;
+        }
+        startGame();
+    }
+
+    function startGame( newGame ) {
+        newGame = true;
         gameState = {
-            level : 0,
+            level : 3,
             score : 0,
-            startTimeStamp : 0, // time at start of level
-            levelDuration : 0, // time to jewel over
-            timer :   gameState.timer || 0 // setTimeout reference
+            tickTime: 2000
         };
 
-        var activeGame = storage.get(STORAGE_KEY)
-            ,useActiveGame = activeGame && !resetState // de-morgan logic
-            ,startJewels
-        ;
-
-        if( useActiveGame ){
-//            useActiveGame = window.confirm('Do you want to continue your previous jewel?');
-            gameState.level = activeGame.level;
-            gameState.score = activeGame.score;
-            gameState.levelDuration = activeGame.levelDuration;
-            gameState.startTimeStamp = Date.now() -  activeGame.time;
-            startJewels = activeGame.jewels;
+        if( newGame ){
+            storage.set(STORAGE_KEY_GAME_STATE,null);
+        }else{
+            var activeGame = storage.get(STORAGE_KEY_GAME_STATE)
+                ,useActiveGame = !!activeGame
+            ;
+            if( useActiveGame ){
+                gameState.level = activeGame.level;
+                gameState.score = activeGame.score;
+                var startBoard = activeGame.board;
+            }
         }
-
         updateGameInfo();
-        board.initialize(startJewels,function () {
+        board.initialize(startBoard, gameState.level, function () {
             display.initialize(function () {
-                pieces = {
-                    x:0,
-                    y: 0,
-                    selected:false
-                };
-                display.redraw(board.getBoard(), function () {
-                  if(useActiveGame){
-                      setLevelTimer();
-                  }else{
-                      advanceLevel();
-                  }
+                display.redraw(board.getBoard(),board.getPicesQueue(), function () {
+                    tick();
                 })
             })
         });
@@ -60,6 +56,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
         $pauseOverlay.style.display = 'none';
 
     }
+
     function setup(){
         $pauseOverlay =  $('#game-screen .pause-overlay')[0];
         audio.initialize();
@@ -76,13 +73,17 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
         input.bind('moveRight', moveRight );
     }
 
-    function run(){
-        if(firstRun){
-            setup();
-            firstRun = false;
-        }
-        startGame();
+
+    function tick(){
+        if( paused ) return;
+
+//        board.moveActivePicesDown( 1, playBoardEvents );
+
+        setTimeout( tick, gameState.tickTime );
+
+
     }
+
     function playBoardEvents( events ){
         // just in the firstTime
         // because the recursion i don't now if this is the firs time
@@ -94,20 +95,26 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
         if ( events.length> 0){
             var boardEvent = events.shift()
                 ,next = function () {
-                    playBoardEvents(events);
+                    playBoardEvents( events );
                 }
                 ;
             switch(boardEvent.type){
                 case 'move':
-                    display.moveJewels( boardEvent.data, next);
+                    display.moveActivePices( boardEvent.data, next);
                     break;
-                case 'remove':
+                case 'moveRows':
+                    display.movedRow( boardEvent.data, next);
+                    break;
+                case 'removeRows':
                     audio.play('match');
-                    display.removeJewels( boardEvent.data, next);
+                    display.removeRows( boardEvent.data, next);
                     break;
                 case 'refill':
                     announce('No moves!');
                     display.refill( boardEvent.data, next);
+                    break;
+                case 'rotate':
+                    display.rotateActivePices(boardEvent.data, next);
                     break;
                 case 'score' :
                     addScore( boardEvent.data );
@@ -123,7 +130,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
             }
 
         }else{
-            display.redraw(board.getBoard(), function () {
+            display.redraw(board.getBoard(),board.getPicesQueue(), function () {
                 //good to go again
             })
         }
@@ -141,22 +148,22 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     }
 
     function moveUp(){
-        movePieces(0, -1);
+
     }
     function moveDown(){
-        movePieces(0, 1);
+
     }
     function moveLeft(){
-        movePieces(-1, 0);
+        board.moveActivePicesSibling( -1, playBoardEvents );
     }
     function moveRight(){
-        movePieces(1, 0);
+        board.moveActivePicesSibling( 1 , playBoardEvents );
     }
     function rotatePieces(){
-
+        board.rotateActivePices( 1 , playBoardEvents );
     }
     function fastDown(){
-
+        board.moveActivePicesDown(1, playBoardEvents );
     }
 
     function updateGameInfo(){
@@ -165,41 +172,10 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     }
 
 
-    function setLevelTimer( reset ){
-        if( gameState.timer ){
-            clearTimeout(gameState.timer);
-            gameState.timer = 0;
-        }
-        if( reset ) {
-            gameState.startTimeStamp = Date.now();
-            gameState.levelDuration = settings.baseLevelTimer * Math.pow( gameState.level, -0.05 * gameState.level );
-        }
-        var delta = gameState.levelDuration - (Date.now() - gameState.startTimeStamp  )
-            ;
-        if( delta < 0 ){
-               gameOver();
-        }else{
-            var $progress = $('#game-screen .time .indicator')[0]
-                ,percent = (delta / gameState.levelDuration ) * 100
-                ;
-            $progress.style.width = percent + '%';
-            gameState.timer = setTimeout( setLevelTimer, 30);
-        }
-//        saveGameData();
-
-    }
-
-    function exitGame(){
+      function exitGame(){
         pauseGame();
-//        var confirmed = window.confirm("do you exit, it's ok?");
-//        if(confirmed){
-            saveGameData();
-            game.showScreen('main-menu');
-//        }else{
-//            resumeGame();
-//        }
-
-
+        saveGameData();
+        game.showScreen('main-menu');
     }
 
     function pauseGame() {
@@ -218,9 +194,9 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
         $pauseOverlay.style.display = 'none';
         paused = false;
         var pauseTime = Date.now()  -  pauseStart;
-        gameState.startTimeStamp += pauseTime;
-        setLevelTimer();
+        gameState.startTime += pauseTime;
         display.resume( pauseTime );
+        tick();
 
     }
 
@@ -257,8 +233,8 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     }
 
     function gameOver(){
-        audio.play(STORAGE_KEY,'gameover');
-        storage.set(STORAGE_KEY,null);
+        audio.play(STORAGE_KEY_GAME_STATE,'gameover');
+        storage.set(STORAGE_KEY_GAME_STATE,null);
         storage.set(STORAGE_KEY_LAST_SCORE, gameState.score);
         display.gameOver(function () {
                 announce(' Game Over');
@@ -270,61 +246,23 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
 
     }
 
-    function setCursor(x, y, select){
-        pieces.x = x;
-        pieces.y = y;
-        pieces.selected = select;
-        display.setCursor(x, y, select);
-    }
-
-//    function selectJewel(x,y){
-//        if( paused ){
-//            return;
-//        }
-//        if(arguments.length == 0){
-//            selectJewel(pieces.x, pieces.y );
-//            return;
-//        }
-//        if(pieces.selected){
-//            var dx = Math.abs(x-pieces.x)
-//                ,dy = Math.abs(y-pieces.y)
-//                ,dist = dx+dy
-//                ;
-//            if(dist === 0){
-//                //deselected the selected jewel
-//                setCursor(x,y,false);
-//            }else if(dist == 1){
-//                //selected an adjacent jewel
-//                jewel.board.swap( pieces.x, pieces.y, x, y, playBoardEvents );
-//                setCursor(x,y, false);
-//            }else{
-//                // selected a different jewel
-//                setCursor(x,y,true);
-//            }
-//        }else{
-//            setCursor(x, y, true);
-//        }
-//    }
-
-
-
     function saveGameData(){
-        storage.set(STORAGE_KEY,{
+        storage.set(STORAGE_KEY_GAME_STATE,{
             level : gameState.level,
             score : gameState.score,
-            time : Date.now() - gameState.startTimeStamp,
+            time : Date.now() - gameState.startTime,
             levelDuration : gameState.levelDuration,
             jewels : board.getBoard()
         })
     }
 
     function restoreGameData(){
-        var activeGameObject = storage.get(STORAGE_KEY)
+        var activeGameObject = storage.get(STORAGE_KEY_GAME_STATE)
             ;
             gameState.level = activeGameObject.level;
             gameState.score = activeGameObject.score;
             gameState.levelDuration = activeGameObject.levelDuration;
-            gameState.startTimeStamp = Date.now() -  activeGameObject.time;
+            gameState.startTime = Date.now() -  activeGameObject.time;
             startJewels = activeGameObject.jewels;
 
     }

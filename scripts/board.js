@@ -10,16 +10,17 @@ system.register(function board( settings ,Pices) {
         ,baseScore = settings.baseScore
         ,EMPTY_SPACE = 0
         ,picesQueue =[]
-        ,random = Math.random
-        ,floor = Math.floor
+        ,_random = Math.random
+        ,_floor = Math.floor
+        ,_min = Math.min
+        ,_max = Math.max
         ;
 /*
 * level: start from 0
 * */
     function initialize(startBoard, level, callback) {
-        activePices = Pices.create();
-        activePices.x = floor( random() * cols );
-        activePices.y = -activePices.height;
+        addPicesToQueue();
+        addPicesToQueue();
 
         if( startBoard ){
             board = startBoard;
@@ -43,80 +44,68 @@ system.register(function board( settings ,Pices) {
                 board[x][y] = EMPTY_SPACE;
             }
         }
-        while(level--){
-            var pices = Pices.create(); //random
-            pices.rotate( Math.floor( Math.random() * 4 ) );
-            bottomDownPices(pices);
-        }
+//        while( level-- ){
+//            var pices = Pices.create(); //_random
+//            pices.rotate( Math.floor( Math.random() * 4 ) );
+//            pices.x = _floor( _random() * (cols-1-pices.width) );
+//            movePicesDown( pices, rows );
+//
+//            addPicesToBoard( pices );
+//        }
+        /*test*/
+        pices = Pices.create(0); //_random
+            pices.x = 0;
+            pices.y = 18;
+        addPicesToBoard( pices );
+        pices = Pices.create(0); //_random
+            pices.x = 2;
+            pices.y = 18;
+        addPicesToBoard( pices );
+pices = Pices.create(0); //_random
+            pices.x = 4;
+            pices.y = 18;
+        addPicesToBoard( pices );
+pices = Pices.create(0); //_random
+            pices.x = 6;
+            pices.y = 18;
+        addPicesToBoard( pices );
+pices = Pices.create(1); //_random
+            pices.x = 9;
+            pices.y = 16;
+            pices.rotate(1);
+
+        addPicesToBoard( pices );
+
         // try again if new board has stacked already
         if( isGameEnd() ){
             fillBoard();
         }
     }
 
-    function isGameEnd(){
-        var isEnd = false;
-        for( var x=0; x<cols; x++){
-            // there is pices out of board area
-            isEnd |= board[x][-1] || board[x][-2]|| board[x][-3];
+    function isFreeCollision(map0, map1, width, height ){
+        for( var x=0; x < width ; x++){
+            for( var y=0; y < height ; y++){
+                if( map0[x][y] && map1[x][y] )
+                    return false
+            }
         }
-        return isEnd;
+        return true;
     }
 
-    function bottomDownPices(pices){
-        //todo:reimplemt that
-        var steps = rows;
-        var steps =  checkMoveDown(pices, steps);
-        pices.y = steps;
-        addPicesToBoard( pices );
-    }
+    function getMap(dx,dy,width, height){
+        var map = [];
 
-    function checkPicesBlocked (){
-        //todo: check if necessary
-
-        var map = activePices.getMap()
-            ,x = activePices.x
-            ,y = activePices.y
-            ,width = activePices.width
-            ,height = activePices.height
-            ,picesRow
-            ,boardSlice
-
-            ;
-        while(height--){ // start from height-1
-            picesRow = activePices.getRow( height );
-            boardSlice = getRow(y + height + 1, x, x+width );
-            x= width;
-            while(x--){
-                if( picesRow[x] && boardSlice[x] ){
-                    return true
+        for( var x=0; x < width ; x++){
+            map[x] = [];
+            for( var y=0; y < height ; y++){
+                if( dy+y < 0 || dx+x < 0 || dy+y >= rows || dx+x >= cols){
+                    map[x][y] = 0;
+                }else{
+                    map[x][y] = board[dx+x][dy+y];
                 }
             }
         }
-        return false;
-    }
-
-    function addPicesToBoard(pices){
-        var x = pices.x
-            ,y = pices.y
-            ,width
-            ,height = pices.height
-            ,map = pices.map
-            ;
-        while(height--){
-            width = pices.width;
-            while(width--){
-                board[x+width][y+height] = map[width][height]
-            }
-        }
-        checkForFullRows();
-        addPicesToQueue();
-    }
-    function addPicesToQueue(){
-        var newPices = Pices.create();
-            newPices.x = Math.floor( Math.random() * (cols-1) );
-            newPices.y = -newPices.height;
-        picesQueue.push( newPices );
+        return map;
     }
 
     function getRow(y,xStart,xEnd){
@@ -129,50 +118,18 @@ system.register(function board( settings ,Pices) {
         return row;
     }
 
-    function checkForFullRows(){
-        var
-            events = events || []
-            ,gaps = 0
-            ,score = 0
-            ,removed = [], moved = []
+    function getColumn(x,yStart,yEnd){
+        var col =[]
             ;
-        for (var y = rows - 1; y >= 0; y--) {
-            var isFullRow = true;
-            for( var x = 0; x < cols; x++ ){
-                if ( board[x][y] == 0 ) {
-                    isFullRow = false;
-                    break;
-                }
-            }
-            if( isFullRow ){
-                gaps++;
-                removed.push({
-                    row: y
-                });
-                score += baseScore * gaps;
-            }else if( gaps ){
-                moved.push({
-                    fromRow:y
-                    ,toRow:y+gaps
-                })
-            }
+        yStart = yStart || 0;
+        yEnd = yEnd || rows;
 
+        for(var i= 0,y = yStart; y<yEnd; y++, i++){
+            col[i]= board[x][y];
         }
-        return events.push({
-            type: "remove",
-            data: removed
-        }, {
-            type: 'score',
-            data: score
-        }, {
-            type: 'move',
-            data: moved
-        });
+        return col;
     }
 
-    /*
-     * create a copy of the jewel board
-     * */
     function getBoard(){
         var copy = [],
             x
@@ -183,104 +140,266 @@ system.register(function board( settings ,Pices) {
         return copy;
     }
 
-    function checkMoveSibling(pices, steps){
-        var width = pices.width
-            ,height = pices.height
-            ,map = pices.map
-            ,x = pices.x
-            ,y = pices.y
-            ,bX,pX
-            ,sign = (n >> 31) + (n > 0)
-            ;
-        if( (x + width + steps > cols) || (x + steps < 0) ){
-            return false;
+    function getPicesQueue(){
+        //return copy
+        return picesQueue.map( getPicesCopy );
+    }
+     function getPicesCopy( pices ){
+         return{
+             x:pices.x,
+             y:pices.y,
+             type:pices.type,
+             map:pices.map,
+             width: pices.width,
+             height: pices.height
+         }
+     }
+
+    function isGameEnd(){
+        var isEnd = false;
+        for( var x=0; x<cols; x++){
+            // there is pices out of board area
+            isEnd |= board[x][-1] || board[x][-2]|| board[x][-3];
         }
-
-        if( steps < 0){
-            bX = x + steps;
-            pX = 0;
-        }else{
-            bX = x + width + steps;
-            pX = width -1;
-        }
-
-        do{
-            var boardCol = board[bX].slice(y,y+height)
-                ,picesCol = map[pX]
-                ,dy = 0
-                ;
-
-            while((dy++) ^ height ){
-                if( boardCol[dy] && picesCol[dy] ){
-                    return false;
-                }
-            }
-            bX+=sign;
-            pX+=sign;
-        }while( steps-- );
-
-        return true;
+        return isEnd;
     }
 
-    function checkMoveDown(pices, steps){
-        var width = pices.width
+    function addPicesToBoard( pices , events ){
+        var x = pices.x
+            ,y = pices.y
+            ,width
             ,height = pices.height
-            ,picesRow = pices.getRow(height-1)
-            ,x = pices.x
-            ,board_y = pices.y + height
-            ,boardSlice
+            ,map = pices.map
             ;
-
-        pices.print();
-        var  destination = Math.min( steps+board_y, rows );
-        while( board_y < destination ){
-            boardSlice = getRow(board_y , x, x+width );
-            for(x=width; x>0; x--){
-                if( boardSlice[x] && picesRow[x] ) {
-                    return board_y-height;
+        while(height--){
+            width = pices.width;
+            while(width--){
+                if(  map[width][height] != 0 ){
+                    board[x+width][y+height] = map[width][height] * pices.type ;
                 }
             }
-            board_y++;
         }
-        //availableSteps
-        return board_y-height;
 
+        events && events.push({
+           type:'attach',
+           data:{
+               pices: getPicesCopy( pices )
+           }
+        });
+        checkRows( events );
+//        addPicesToQueue();
+    }
+    function addPicesToQueue(){
+        var newPices = Pices.create();
+            newPices.x = _floor( _random() * (cols-1-newPices.width) );
+//            newPices.y = -newPices.height;
+        newPices.y = 5;
+        picesQueue.push( newPices );
+    }
+
+
+
+    function checkRows( events ){
+        var
+            events = events || []
+            ,gaps = 0
+            ,score = 0
+            ,removed = [], moved = []
+            ,row
+            ,rowCompared = [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            ],
+            isFullRow = function ( row ){
+                for( var x = 0, len = row.length; x < len ; x++ ){
+                    if ( row[x] <= 0 ) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            movedRow = function(from , to){
+                for( var x= 0 ; x < cols; x++ ){
+                    board[x][to] = board[x][from];
+                }
+            },
+            removedRow = function( from ){
+                for( var x= 0 ; x < cols; x++ ){
+                    board[x][from] = EMPTY_SPACE;
+                }
+            }
+        ;
+        for (var y = rows - 1; y >= 0; y--) {
+            row = getRow(y,0, cols);
+            if( isFullRow( row ) ){ //isFullRow
+                gaps++;
+                removed.push({
+                    row: row,
+                    from:y
+                });
+                removedRow( y );
+                score += baseScore * gaps;
+            }else if( gaps ){
+                moved.push({
+                    row: row,
+                    from:y,
+                    to:y+gaps
+                });
+                movedRow( y, y + gaps );
+            }
+
+        }
+        return events.push({
+            type: "removeRows",
+            data: removed
+        }, {
+            type: 'score',
+            data: score
+        }, {
+            type: 'moveRows',
+            data: moved
+        });
     }
 
     /*move pices*/
-    function movePicesSibling(dx){
-        var activePices = picesQueue[0];
-        // x movement
-        var x = 0;
-        while(x++ < dx){
-            if(checkMoveSibling(x)){
-                activePices.x++;
-            }else{
-                break
+    function movePicesSibling(pices, dx ,events ){
+        var
+             width = pices.width
+            ,height = pices.height
+            ,picesMap = pices.map
+            ,x = pices.x
+            ,y = pices.y
+            ,boardMap
+            ,s = dx.sign()
+            ,before = getPicesCopy( pices )
+            ;
+
+        dx = _max( 0, _min( x + dx, cols - width ) );
+        // there is no move...
+        if(x == dx ) return;
+
+        for( ; s<0? x>dx : x<dx  ;x+=s ){
+            boardMap = getMap( x+1, y, width, height);
+            if( isFreeCollision( boardMap, picesMap, width, height ) ){
+                pices.x+=s;
             }
         }
-    }
-     function movePicesDown(dy){
-         var activePices = picesQueue[0];
-        // y movement
-        if( dy < 1){
-            return;
-        }
-        var y = 1;
-        while(y++ < dy){
-            if(checkMoveDown(y)){
-                activePices.y++;
-            }else{
-                addPicesToBoard( activePices )
-            }
-        }
+
+        events && events.push({
+            type:'move',
+            data:[{
+                before: before,
+                after: getPicesCopy( pices )
+            }]
+        });
     }
 
-    function print() {
+    function movePicesDown(pices, dy, events ){
+        pices.print();
+        if( dy < 1){ return; }
+
+        var
+            width = pices.width,
+            height = pices.height,
+            picesMap = pices.map,
+            x = pices.x,
+            y = pices.y,
+            boardMap,
+            before = getPicesCopy( pices),
+            endBoard = rows - height
+            ;
+//        dy = Math.min( y + dy , rows - height );
+        dy = y+dy;
+        for(  ; y < dy ; y++ ){
+            boardMap = getMap( x, y+1, width, height);
+            if( isFreeCollision( boardMap, picesMap, width, height ) && y < endBoard ){
+                pices.y++
+            }else{
+                events && events.push({
+                    type:'move',
+                    data:[{
+                        before: before,
+                        after :  getPicesCopy( pices )
+                    }]
+                });
+                return false; // blocked in the way or out board
+            }
+        }
+        return true; // free move
+    }
+
+    function rotatePices( pices, r, events ){
+        var width, height, boardMap;
+        var x,y;
+
+        var data = {
+            before: getPicesCopy( pices)
+        };
+
+        pices.rotate( r );
+        width = pices.width;
+        height = pices.height;
+        x = pices.x;
+        y = pices.y;
+        boardMap = getMap( x, y, width, height);
+        if( !isFreeCollision( boardMap, pices.map, width, height ) ){
+            pices.rotate( -r );
+            return false; // blocked in the way
+        }
+
+        data.after = getPicesCopy( pices);
+        events.push({
+            type:'rotate',
+            data:[data]
+        });
+        return true;
+    }
+
+    function moveActivePicesDown( dy, callback ){
+        var events = [];
+        if( !movePicesDown( picesQueue[0], dy, events ) ){
+            addPicesToBoard( picesQueue[0], events );
+            picesQueue.shift();
+            addPicesToQueue(events);
+        }
+
+        callback( events )
+    }
+
+    function moveActivePicesSibling( dx, callback ){
+        var events = [];
+
+        movePicesSibling( picesQueue[0], dx, events );
+
+        callback( events );
+    }
+
+    function rotateActivePices( r, callback ){
+        var events = [];
+        rotatePices( picesQueue[0], r , events);
+        callback(events);
+    }
+
+    function print( pices ) {
         var str = "\n\r";
+        if(pices){
+            var xstart = pices.x - 1;
+            var xend = pices.x+pices.width;
+            var ystart = pices.y - 1;
+            var yend = pices.y + pices.height;
+            var map = pices.map;
+        }
         for (var y = 0; y < rows; y++) {
             for (var x = 0; x < cols; x++) {
-                str += board[x][y]+ " ";
+                if( pices
+                    && x > xstart && x < xend
+                    && y > ystart && y < yend
+                    && map[x-xstart-1][y-ystart-1]
+                    ){
+
+                    str += 'p' + " ";
+                }else{
+                    str += board[x][y]+ " ";
+                }
             }
             str += "\r\n";
         }
@@ -290,9 +409,11 @@ system.register(function board( settings ,Pices) {
 
 return{
     initialize:initialize
-    ,movePicesSibiling:movePicesSibling
-    ,movePicesDown:movePicesDown
+    ,moveActivePicesSibling:moveActivePicesSibling
+    ,moveActivePicesDown:moveActivePicesDown
+    ,rotateActivePices:rotateActivePices
     ,getBoard:getBoard
+    ,getPicesQueue:getPicesQueue
     ,print:print
 }
 

@@ -200,6 +200,16 @@ var system = (function(){
     function hasWebWorkers(){
         return ("Worker" in window);
     }
+    /*prototype section*/
+
+
+    Number.prototype.sign = function(){
+        var value = this.valueOf();
+        // super fast by stackoverflow
+        return typeof value === 'number' ? value ? value < 0 ? -1 : 1 : value === value ? 0 : NaN : NaN;
+    }
+
+
 
     return{
         register:register,
