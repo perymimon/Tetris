@@ -24,9 +24,23 @@ system.register(function animations(){
                     anim.pos = animTime / anim.runTime;
                     anim.pos = Math.max(0, Math.min(1,anim.pos));
                     break;
+                case 'fromTo':
+                    // last position that used
+                    anim.fncs.before && anim.fncs.before(anim.pos);
+                    anim.lastPos = anim.pos;
+                    // generate new position
+                    animTime = (lastTime - anim.startTime);
+                    anim.pos = animTime / anim.runTime;
+                    anim.pos = Math.max(0, Math.min(1,anim.pos));
+                    //continue calculation above
+                    anim.pos = anim.from + (anim.to - anim.from) * anim.pos;
+                    break;
+
                 case 'custom':
                     anim.fncs.before && anim.fncs.before();
-                break;
+                    break;
+
+
 
             }
 
@@ -52,11 +66,30 @@ system.register(function animations(){
                         animations.push(anim);
                     }
                 break;
+                case 'fromTo':
+                    anim.fncs.render( anim.pos );
+                    if( anim.pos == anim.to){
+                        anim.fncs.done && anim.fncs.done();
+                    }else{
+                        animations.push(anim);
+                    }
+                    break;
             }
 
         }
     }
-
+    function addFromToAnimation( from, to, runTime, fncs ){
+        var anim = {
+            type:'fromTo',
+            from:from,
+            to:to,
+            runTime:runTime,
+            startTime : Date.now(),
+            pos:0,
+            fncs: fncs
+        };
+        animations.push(anim);
+    }
 
     function addCustomAnimation( checkDone, fncs ){
         var anim = {
@@ -107,6 +140,7 @@ system.register(function animations(){
 return {
     addFixedTime:addFixedTimeAnimation,
     addCustom:addCustomAnimation,
+    addFromTo:addFromToAnimation,
     paused: paused,
     resume:resume
 }

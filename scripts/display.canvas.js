@@ -173,7 +173,7 @@ system.register(function display( game, dom, $, settings, effects, animations ) 
           removed.forEach(function (data, i) {
               var y = data.from;
               var imageData =  ctx.getImageData( 0, y * cubeSize, cubeSize * cols, cubeSize );
-              var burnFX = effects.burn(ctx, imageData, i);
+              var burnFX = effects.burn( ctx, imageData );
               animations.addCustom( function(){
                   return burnFX.done;
                 },{
@@ -181,37 +181,54 @@ system.register(function display( game, dom, $, settings, effects, animations ) 
                       ctx.putImageData(burnFX.next(),0, y * cubeSize);
                   },
                   done: function () {
-                      console.log('effect done');
+                      console.log('burn effect done');
                       if( --n <=0 ){
                           next();
                       }
 
                   }
-              })
-
-          });
-
-     /*   for(var i= 0 ; i< removed.length; i++){
-            var y = removed[i].from;
-            var row = removed[i].row;
-            for(var x= 0 ; x< row.length; x++){
-                clearPicesCube( x, y );
-            }
-        }
-        next();*/
+              });
+        });
     }
 
     function movedRow ( moved, next ){
-        for(var i= 0 ; i< moved.length; i++){
-            var from = moved[i].from;
-            var to = moved[i].to;
-            var row = moved[i].row;
-            for( var x= 0 ; x < row.length; x++ ){
-                clearPicesCube( x, from );
-                drawPicesCube( x,  to, row[x] );
-            }
-        }
-        next();
+
+        var n = moved.length;
+        moved.forEach(function(data){
+              var from = data.from,
+                  to = data.to,
+                  row = data.row,
+                  color;
+            animations.addFromTo( from, to, 100, {
+                before: function (pos) {
+                    for( var x= 0 ; x < row.length; x++ ){
+                        clearPicesCube( x, pos );
+                    }
+                },
+                render: function ( pos ) {
+                    for( var x= 0 ; x < row.length; x++ ){
+                        color = settings.color[ row[x] ];
+                        drawPicesCube( x, pos , color);
+                    }
+                },
+                done: function () {
+                    if( --n <=0 ){
+                        next();
+                    }
+                }
+            })
+
+        });
+//        for( var i= 0 ; i< moved.length; i++){
+//            var from = moved[i].from;
+//            var to = moved[i].to;
+//            var row = moved[i].row;
+//            for( var x= 0 ; x < row.length; x++ ){
+//                clearPicesCube( x, from );
+//                drawPicesCube( x,  to, row[x] );
+//            }
+//        }
+//        next();
     }
 
 
@@ -370,6 +387,7 @@ system.register(function display( game, dom, $, settings, effects, animations ) 
     }
 
     function drawPicesCube( x, y, color){
+        if(!color) return; // empty cube
         ctx.save();
         ctx.lineWidth = 0.1;
         ctx.strokeStyle = 'rgba(100,100,100,0.2)';

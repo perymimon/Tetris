@@ -34,7 +34,7 @@
   <component name="FileEditorManager">
     <splitter split-orientation="horizontal" split-proportion="0.7172496">
       <split-first>
-        <splitter split-orientation="horizontal" split-proportion="0.5497771">
+        <splitter split-orientation="horizontal" split-proportion="0.51708764">
           <split-first>
             <leaf>
               <file leaf-file-name="main.css" pinned="false" current="false" current-in-tab="false">
@@ -49,32 +49,31 @@
               <file leaf-file-name="board.js" pinned="false" current="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/scripts/board.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state line="262" column="15" selection-start="6737" selection-end="6737" vertical-scroll-proportion="-23.307692" vertical-offset="3848" max-vertical-offset="7684">
+                    <state line="17" column="9" selection-start="446" selection-end="446" vertical-scroll-proportion="-11.115385" vertical-offset="0" max-vertical-offset="7684">
                       <folding />
                     </state>
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="pices.js" pinned="false" current="false" current-in-tab="false">
+              <file leaf-file-name="pices.js" pinned="false" current="true" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/scripts/pices.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state line="23" column="21" selection-start="470" selection-end="492" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4097">
+                    <state line="81" column="20" selection-start="1499" selection-end="1499" vertical-scroll-proportion="0.6899662" vertical-offset="765" max-vertical-offset="4097">
                       <folding />
                     </state>
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="display.canvas.js" pinned="false" current="false" current-in-tab="true">
+              <file leaf-file-name="display.canvas.js" pinned="false" current="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/scripts/display.canvas.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state line="181" column="0" selection-start="5470" selection-end="5470" vertical-scroll-proportion="0.46335965" vertical-offset="1697" max-vertical-offset="5729">
+                    <state line="389" column="40" selection-start="11888" selection-end="11888" vertical-scroll-proportion="-11.692307" vertical-offset="5102" max-vertical-offset="6307">
                       <folding>
                         <element signature="e#453#1422#0" expanded="false" />
                         <element signature="e#3668#3685#0" expanded="false" />
-                        <element signature="e#10377#10781#0" expanded="false" />
-                        <element signature="e#10822#11171#0" expanded="false" />
-                        <element signature="e#11602#11740#0" expanded="false" />
-                        <element signature="e#11792#12577#0" expanded="false" />
+                        <element signature="e#11455#11804#0" expanded="false" />
+                        <element signature="e#12276#12414#0" expanded="false" />
+                        <element signature="e#12466#13251#0" expanded="false" />
                       </folding>
                     </state>
                   </provider>
@@ -87,13 +86,14 @@
               <file leaf-file-name="display.canvas.js" pinned="false" current="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/scripts/display.canvas.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state line="148" column="20" selection-start="4258" selection-end="4264" vertical-scroll-proportion="-11.038462" vertical-offset="1753" max-vertical-offset="6732">
+                    <state line="142" column="27" selection-start="4063" selection-end="4063" vertical-scroll-proportion="36.03846" vertical-offset="2875" max-vertical-offset="7038">
                       <folding>
                         <element signature="e#453#1422#0" expanded="false" />
-                        <element signature="e#11602#11740#0" expanded="false" />
-                        <element signature="e#11792#12577#0" expanded="false" />
-                        <marker date="1406977297127" expanded="true" signature="5776:5964" placeholder="{...}" />
-                        <marker date="1406977297127" expanded="true" signature="5899:5954" placeholder="{...}" />
+                        <element signature="e#12276#12414#0" expanded="false" />
+                        <element signature="e#12466#13251#0" expanded="false" />
+                        <marker date="1406986032267" expanded="true" signature="4986:5729" placeholder="{...}" />
+                        <marker date="1406986032267" expanded="true" signature="6688:6980" placeholder="{...}" />
+                        <marker date="1406986032267" expanded="true" signature="6855:6968" placeholder="{...}" />
                       </folding>
                     </state>
                   </provider>
@@ -102,7 +102,7 @@
               <file leaf-file-name="animations.js" pinned="false" current="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/scripts/animations.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state line="13" column="0" selection-start="315" selection-end="315" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2006">
+                    <state line="42" column="0" selection-start="1557" selection-end="1558" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2584">
                       <folding>
                         <element signature="e#0#39#0" expanded="false" />
                       </folding>
@@ -110,14 +110,11 @@
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="effects.js" pinned="false" current="true" current-in-tab="true">
+              <file leaf-file-name="effects.js" pinned="false" current="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/scripts/effects.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state line="105" column="0" selection-start="3301" selection-end="3301" vertical-scroll-proportion="0.89555556" vertical-offset="401" max-vertical-offset="2159">
-                      <folding>
-                        <element signature="e#0#39#0" expanded="false" />
-                        <element signature="e#844#2082#0" expanded="false" />
-                      </folding>
+                    <state line="52" column="46" selection-start="1747" selection-end="1747" vertical-scroll-proportion="0.41555557" vertical-offset="510" max-vertical-offset="2040">
+                      <folding />
                     </state>
                   </provider>
                 </entry>
@@ -128,10 +125,10 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="screen.game.js" pinned="false" current="false" current-in-tab="true">
+          <file leaf-file-name="screen.game.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/scripts/screen.game.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="8" column="0" selection-start="189" selection-end="205" vertical-scroll-proportion="0.11499436" vertical-offset="0" max-vertical-offset="4930">
+                <state line="8" column="0" selection-start="189" selection-end="205" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930">
                   <folding />
                 </state>
               </provider>
@@ -140,8 +137,19 @@
           <file leaf-file-name="game.js" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/scripts/game.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="17" column="45" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2227">
+                <state line="41" column="20" selection-start="1371" selection-end="1371" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2244">
                   <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="util.js" pinned="false" current="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/scripts/util.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="50" column="0" selection-start="1200" selection-end="1200" vertical-scroll-proportion="0.9066667" vertical-offset="0" max-vertical-offset="986">
+                  <folding>
+                    <element signature="e#0#39#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -181,8 +189,11 @@
         <option value="$PROJECT_DIR$/scripts/screen.game.js" />
         <option value="$PROJECT_DIR$/scripts/efects.js" />
         <option value="$PROJECT_DIR$/scripts/animation.js" />
-        <option value="$PROJECT_DIR$/scripts/game.js" />
         <option value="$PROJECT_DIR$/scripts/board.js" />
+        <option value="$PROJECT_DIR$/scripts/fx/burn.js" />
+        <option value="$PROJECT_DIR$/scripts/fx/burn2.js" />
+        <option value="$PROJECT_DIR$/scripts/tools.js" />
+        <option value="$PROJECT_DIR$/scripts/game.js" />
         <option value="$PROJECT_DIR$/scripts/animations.js" />
         <option value="$PROJECT_DIR$/scripts/display.canvas.js" />
         <option value="$PROJECT_DIR$/scripts/effects.js" />
@@ -266,6 +277,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tetris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Tetris" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fx" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -398,7 +427,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -428,10 +457,10 @@
         <state line="168" column="16" selection-start="4458" selection-end="4458" vertical-scroll-proportion="0.0" vertical-offset="2370" max-vertical-offset="8126">
           <folding>
             <element signature="e#453#1422#0" expanded="false" />
-            <element signature="e#11602#11740#0" expanded="false" />
-            <element signature="e#11792#12577#0" expanded="false" />
-            <marker date="1406977297127" expanded="true" signature="5776:5964" placeholder="{...}" />
-            <marker date="1406977297127" expanded="true" signature="5899:5954" placeholder="{...}" />
+            <element signature="e#3668#3685#0" expanded="false" />
+            <element signature="e#11455#11804#0" expanded="false" />
+            <element signature="e#12276#12414#0" expanded="false" />
+            <element signature="e#12466#13251#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -597,20 +626,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/game.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="45" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2227">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/screen.game.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="0" selection-start="189" selection-end="205" vertical-scroll-proportion="0.11499436" vertical-offset="0" max-vertical-offset="4930">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="42" column="30" selection-start="1822" selection-end="1822" vertical-scroll-proportion="0.18118466" vertical-offset="558" max-vertical-offset="2159">
@@ -627,49 +642,85 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/pices.js">
+    <entry file="file://$PROJECT_DIR$/scripts/fx/burn2.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="21" selection-start="470" selection-end="492" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4097">
+        <state line="94" column="1" selection-start="2928" selection-end="2928" vertical-scroll-proportion="0.0" vertical-offset="732" max-vertical-offset="1700">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/board.js">
+    <entry file="file://$PROJECT_DIR$/scripts/screen.game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="262" column="15" selection-start="6737" selection-end="6737" vertical-scroll-proportion="-23.307692" vertical-offset="3848" max-vertical-offset="7684">
+        <state line="8" column="0" selection-start="189" selection-end="205" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4930">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/display.canvas.js">
+    <entry file="file://$PROJECT_DIR$/scripts/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="20" selection-start="4258" selection-end="4264" vertical-scroll-proportion="-11.038462" vertical-offset="1753" max-vertical-offset="6732">
+        <state line="41" column="20" selection-start="1371" selection-end="1371" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2244">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="0" selection-start="1200" selection-end="1200" vertical-scroll-proportion="0.9066667" vertical-offset="0" max-vertical-offset="986">
           <folding>
-            <element signature="e#453#1422#0" expanded="false" />
-            <element signature="e#11602#11740#0" expanded="false" />
-            <element signature="e#11792#12577#0" expanded="false" />
-            <marker date="1406977297127" expanded="true" signature="5776:5964" placeholder="{...}" />
-            <marker date="1406977297127" expanded="true" signature="5899:5954" placeholder="{...}" />
+            <element signature="e#0#39#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/animations.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="315" selection-end="315" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2006">
+        <state line="42" column="0" selection-start="1557" selection-end="1558" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2584">
           <folding>
             <element signature="e#0#39#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/fx/burn.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="1" selection-start="40" selection-end="2866" vertical-scroll-proportion="0.05666667" vertical-offset="0" max-vertical-offset="900">
+          <folding>
+            <element signature="n#!!block;n#burnFx#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/display.canvas.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="389" column="40" selection-start="11888" selection-end="11888" vertical-scroll-proportion="-11.692307" vertical-offset="5102" max-vertical-offset="6307">
+          <folding>
+            <element signature="e#453#1422#0" expanded="false" />
+            <element signature="e#3668#3685#0" expanded="false" />
+            <element signature="e#11455#11804#0" expanded="false" />
+            <element signature="e#12276#12414#0" expanded="false" />
+            <element signature="e#12466#13251#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/effects.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="105" column="0" selection-start="3301" selection-end="3301" vertical-scroll-proportion="0.89555556" vertical-offset="401" max-vertical-offset="2159">
-          <folding>
-            <element signature="e#0#39#0" expanded="false" />
-            <element signature="e#844#2082#0" expanded="false" />
-          </folding>
+        <state line="52" column="46" selection-start="1747" selection-end="1747" vertical-scroll-proportion="0.41555557" vertical-offset="510" max-vertical-offset="2040">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/board.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="9" selection-start="446" selection-end="446" vertical-scroll-proportion="-11.115385" vertical-offset="0" max-vertical-offset="7684">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/pices.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="81" column="20" selection-start="1499" selection-end="1499" vertical-scroll-proportion="0.6899662" vertical-offset="765" max-vertical-offset="4097">
+          <folding />
         </state>
       </provider>
     </entry>

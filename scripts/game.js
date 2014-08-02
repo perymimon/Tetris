@@ -14,6 +14,7 @@ system.register(function () {
 
 //               }
         system.loadScript('scripts/screen.game.js');
+        system.loadScript('scripts/util.js');
         system.loadScript('scripts/effects.js');
         system.loadScript('scripts/animations.js');
         system.loadScript('scripts/display.canvas.js');
