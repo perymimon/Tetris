@@ -232,7 +232,7 @@ ul.menu li button:active {
     height: 8em;
     perspective: 16em;
     margin-top: 1em;
-    margin-left: 0.7em;
+    margin-left: 0.7rem;
     -webkit-perspective: 16em;
     -moz-perspective: 16em;
     -ms-perspective: 16em;
@@ -273,13 +273,10 @@ ul.menu li button:active {
     width: 100%;
     text-align: center;
     margin-top: 50%;
-    font-family: Slackey, sans-serif;
+    font-family: napkin, sans-serif;
     font-size: 1.0em;
-    text-shadow: 0.03em 0.03em 0.03em rgb(255,255,0),
-    -0.03em -0.03em 0.03em rgb(255,255,0),
-    0.10em 0.15em 0.15em rgb(0,0,0)
-;
-    color: rgb(70,120,20);
+    text-shadow: 0.03em 0.03em 0.03em rgb(0, 10, 255),      -0.03em -0.03em 0.03em rgb(223, 223, 223),      0.1em 0.15em 0.15em rgba(224, 224, 224, 0.58);
+    color: rgb(61, 123, 216);
 
 }
 
@@ -327,7 +324,7 @@ ul.menu li button:active {
     margin-top:  -0.5em;
     width: 100%;
 
-    font-family: Slackey, sans-serif;
+    font-family: napkin, sans-serif;
     color: rgb(61, 123, 216);
     text-shadow: 0.03em 0.03em 0.03em rgb(0, 10, 255),      -0.03em -0.03em 0.03em rgb(223, 223, 223),      0.1em 0.15em 0.15em rgba(224, 224, 224, 0.58);
     text-align: center;
@@ -335,7 +332,7 @@ ul.menu li button:active {
     z-index: 20; /* in front of eveything else*/
     cursor:default;
     opacity: 0;
-    font-size: 1.4em;
+    font-size:3rem;
 }
 
 /* High score*/

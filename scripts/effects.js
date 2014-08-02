@@ -50,7 +50,7 @@ system.register(function effects( _ ){
                     val -= 1;
                     //colored edge
                     var pix = (xx + yy * w) * 4;
-                    nextFrame.data[pix] +=  50;
+                    nextFrame.data[pix] +=  20;
                     nextFrame.data[pix + 1] += 0;
                     nextFrame.data[pix + 2] += 0;
                     nextFrame.data[pix + 2] += 1;
