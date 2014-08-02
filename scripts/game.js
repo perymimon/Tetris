@@ -11,13 +11,17 @@ system.register(function () {
 //               }else{
         system.loadScript('scripts/pices.js');
         system.loadScript('scripts/board.js');
+
 //               }
         system.loadScript('scripts/screen.game.js');
+        system.loadScript('scripts/effects.js');
+        system.loadScript('scripts/animations.js');
         system.loadScript('scripts/display.canvas.js');
         system.loadScript('scripts/audio.js');
         system.loadScript('scripts/storage.js');
-//               jewel.load('scripts/screen.high-scores.js');
-//               jewel.load('scripts/screen.about.js');
+        system.loadScript('scripts/screen.high-scores.js');
+        system.loadScript('scripts/screen.about.js');
+
 
     }else{
         system.loadScript("scripts/screen.install.js")

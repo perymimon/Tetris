@@ -5,113 +5,57 @@ system.register(function Pices () {
     var piecesTypes = [];
   piecesTypes[0] = {
         type:7,width:2, height:2
-        ,maps:[[
-           [1,1],
-           [1,1]
-        ]]
+        ,map:[
+             [1,1]
+            ,[1,1]
+        ]
     };
+
     piecesTypes[1] = {
-        type:1,width:4, height:4
-        ,maps:[[
-            [0,0,0,0],
-            [1,1,1,1],
-            [0,0,0,0],
-            [0,0,0,0]
-        ],[
-            [0,0,1,0],
-            [0,0,1,0],
-            [0,0,1,0],
-            [0,0,1,0]
-        ]]
+        type:1,width:4, height:1
+        ,map:[
+            [1,1,1,1]
+        ]
     };
 
     piecesTypes[2] = {
-        type:2,width:3, height:3
-        ,maps:[[
-           [0,0,0],
-           [0,1,1],
-           [1,1,0]
-         ],[
-            [0,1,0],
-            [0,1,1],
-            [0,0,1]
-        ]]
+        type:2,width:3, height:2
+        ,map:[
+            [1,0,0]
+            ,[1,1,1]
+        ]
     };
 
     piecesTypes[3] = {
-        type:3,width:3, height:3
-        ,maps:[[
-          [0,0,0],
-          [1,1,0],
-          [0,1,1],
-         ],[
-          [0,0,1],
-          [0,1,1],
-          [0,1,0]
-        ]]
+        type:3,width:3, height:2
+        ,map:[
+             [0,0,1]
+            ,[1,1,1]
+        ]
     };
 
     piecesTypes[4] = {
-        type:4,width:3, height:3
-        ,maps:[[
-            [0,0,0],
-            [1,1,1],
-            [1,0,0]
-        ],[
-            [0,1,0],
-            [0,1,0],
-            [0,1,1]
-        ],[
-            [0,0,1],
-            [1,1,1],
-            [0,0,0]
-        ],[
-            [1,1,0],
-            [0,1,0],
-            [0,1,0]
-        ]]
+        type:4,width:3, height:2
+        ,map:[
+             [0,1,0]
+            ,[1,1,1]
+        ]
     };
 
     piecesTypes[5] = {
-        type:5,width:3, height:3
-        ,maps:[[
-            [0,0,0],
-            [1,1,1],
-            [0,0,1]
-        ],[
-            [0,1,1],
-            [0,1,0],
-            [0,1,0]
-        ],[
-            [1,0,0],
-            [1,1,1],
-            [0,0,0]
-        ],[
-            [0,1,0],
-            [0,1,0],
+        type:5,width:3, height:2
+        ,map:[
             [1,1,0]
-        ]]
+            ,[0,1,1]
+        ]
     };
 
     piecesTypes[6] = {
-        type:6,width:3, height:3
-        ,maps:[[
-            [0,0,0],
-            [1,1,1],
-            [0,1,0]
-        ],[
-            [0,1,0],
-            [0,1,1],
-            [0,1,0]
-        ],[
-            [0,1,0],
-            [1,1,1],
-            [0,0,0]
-        ],[
-            [0,1,0],
-            [1,1,0],
-            [0,1,0]
-        ]]
+        type:6, width:3, height:2
+        ,map:[
+             [0,1,1]
+            ,[1,1,0]
+        ]
     };
 
     function createPicess( number ){
@@ -141,27 +85,23 @@ system.register(function Pices () {
     }
 
     var methods = {
-        getXY:function( x, y ){
-//            var
-//                map = piecesTypes[this.index].map
-//                ,rotate = this.rotation % 4
-//                ,width = piecesTypes[this.index].width - 1
-//                ,height = piecesTypes[this.index].height - 1
-//                ;
-//            switch ( rotate ){
-//                case 0: // 0 deg
-//                    return map[y][x]
-//                case 1: // 90 deg
-//                    return map[height-x][y];
-//                case 2: // 180 deg
-//                    return map[height-y][width-x];
-//                case 3: // 270 deg
-//                    return map[x][width-y];
-//            }
-            var map= piecesTypes[this.index].maps[this.rotation];
-            return map[y][x]
-
-
+        getXY:function(x,y){
+            var
+                map = piecesTypes[this.index].map
+                ,rotate = this.rotation % 4
+                ,width = piecesTypes[this.index].width - 1
+                ,height = piecesTypes[this.index].height - 1
+                ;
+            switch ( rotate ){
+                case 0: // 0 deg
+                    return map[y][x]
+                case 1: // 90 deg
+                    return map[height-x][y];
+                case 2: // 180 deg
+                    return map[height-y][width-x];
+                case 3: // 270 deg
+                    return map[x][width-y];
+            }
         }
         ,get map(){
             var
@@ -177,7 +117,6 @@ system.register(function Pices () {
                 returnMap[x] = col;
             }
             return returnMap;
-
         }
         ,getRow:function(y){
             var row = []
@@ -201,15 +140,13 @@ system.register(function Pices () {
             return col;
         }
         ,rotateRight:function(){
-            this.rotate(1);
+            this.rotation = (this.rotation+1) % 4;
         }
         ,rotateLeft:function(){
-            this.rotate(-1);
+            this.rotation = (this.rotation+3) % 4; //is like -1
         },
         rotate:function(num){
-//            this.rotation = (this.rotation + num) % 4; //is like -1
-            var len = piecesTypes[this.index].maps.length;
-            this.rotation = (this.rotation + num) % len; //is like -1
+            this.rotation = (this.rotation + num) % 4; //is like -1
         },
         print:function(){
             var str = "\n\r";

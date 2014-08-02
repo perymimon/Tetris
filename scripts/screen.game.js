@@ -27,7 +27,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     function startGame( newGame ) {
         newGame = true;
         gameState = {
-            level : 3,
+            level : 0,
             score : 0,
             tickTime: 2000
         };
@@ -108,6 +108,10 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
                 case 'removeRows':
                     audio.play('match');
                     display.removeRows( boardEvent.data, next);
+                    break;
+                case 'gameOver':
+                    audio.play('gameOver');
+                    game.showScreen('high-scores');
                     break;
                 case 'refill':
                     announce('No moves!');

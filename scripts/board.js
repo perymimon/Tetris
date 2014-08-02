@@ -9,6 +9,7 @@ system.register(function board( settings ,Pices) {
         ,numPicesType = settings.numJewelTypes
         ,baseScore = settings.baseScore
         ,EMPTY_SPACE = 0
+        ,OUT_BOARD = 100
         ,picesQueue =[]
         ,_random = Math.random
         ,_floor = Math.floor
@@ -44,39 +45,39 @@ system.register(function board( settings ,Pices) {
                 board[x][y] = EMPTY_SPACE;
             }
         }
+
+        var pices =  Pices.create(1);
+        pices.rotate(0);
+        pices.x = 0;
+        pices.y = 18;
+        addPicesToBoard( pices );
+        pices.rotate(0);
+        pices.x = 4;
+        pices.y =18;
+        addPicesToBoard( pices );
+        pices.rotate(0);
+        pices.x = 0;
+        pices.y = 17;
+        addPicesToBoard( pices );
+        pices.rotate(0);
+        pices.x = 4;
+        pices.y =17;
+        addPicesToBoard( pices );
+        pices.rotate(1);
+        pices.x = 7;
+        pices.y = 16;
+        addPicesToBoard( pices );
+
+
 //        while( level-- ){
 //            var pices = Pices.create(); //_random
-//            pices.rotate( Math.floor( Math.random() * 4 ) );
-//            pices.x = _floor( _random() * (cols-1-pices.width) );
+//            pices.rotate( ~~ ( _random() * 4 ) );
+//            pices.x = ~~ ( _random() * (cols-1-pices.width) );
 //            movePicesDown( pices, rows );
 //
 //            addPicesToBoard( pices );
 //        }
-        /*test*/
-        pices = Pices.create(0); //_random
-            pices.x = 0;
-            pices.y = 18;
-        addPicesToBoard( pices );
-        pices = Pices.create(0); //_random
-            pices.x = 2;
-            pices.y = 18;
-        addPicesToBoard( pices );
-pices = Pices.create(0); //_random
-            pices.x = 4;
-            pices.y = 18;
-        addPicesToBoard( pices );
-pices = Pices.create(0); //_random
-            pices.x = 6;
-            pices.y = 18;
-        addPicesToBoard( pices );
-pices = Pices.create(1); //_random
-            pices.x = 9;
-            pices.y = 16;
-            pices.rotate(1);
-
-        addPicesToBoard( pices );
-
-        // try again if new board has stacked already
+// try again if new board has stacked already
         if( isGameEnd() ){
             fillBoard();
         }
@@ -98,8 +99,10 @@ pices = Pices.create(1); //_random
         for( var x=0; x < width ; x++){
             map[x] = [];
             for( var y=0; y < height ; y++){
-                if( dy+y < 0 || dx+x < 0 || dy+y >= rows || dx+x >= cols){
-                    map[x][y] = 0;
+                if( dy+y < 0 ){
+                    map[x][y] = EMPTY_SPACE;
+                } else if( dx+x < 0 || dy+y >= rows || dx+x >= cols ){
+                    map[x][y] = OUT_BOARD;
                 }else{
                     map[x][y] = board[dx+x][dy+y];
                 }
@@ -155,11 +158,17 @@ pices = Pices.create(1); //_random
          }
      }
 
-    function isGameEnd(){
+    function isGameEnd( events ){
         var isEnd = false;
         for( var x=0; x<cols; x++){
             // there is pices out of board area
             isEnd |= board[x][-1] || board[x][-2]|| board[x][-3];
+        }
+        if(isEnd){
+            events && events.push({
+                type:'gameOver',
+                data:''
+            });
         }
         return isEnd;
     }
@@ -187,13 +196,13 @@ pices = Pices.create(1); //_random
            }
         });
         checkRows( events );
-//        addPicesToQueue();
+        isGameEnd( events );
     }
     function addPicesToQueue(){
         var newPices = Pices.create();
             newPices.x = _floor( _random() * (cols-1-newPices.width) );
-//            newPices.y = -newPices.height;
-        newPices.y = 5;
+            newPices.y = -newPices.height;
+//        newPices.y = 5;
         picesQueue.push( newPices );
     }
 
@@ -248,16 +257,19 @@ pices = Pices.create(1); //_random
             }
 
         }
-        return events.push({
-            type: "removeRows",
-            data: removed
-        }, {
-            type: 'score',
-            data: score
-        }, {
-            type: 'moveRows',
-            data: moved
-        });
+        if( gaps ){
+            events.push({
+                type: "removeRows",
+                data: removed
+            }, {
+                type: 'score',
+                data: score
+            }, {
+                type: 'moveRows',
+                data: moved
+            });
+        }
+
     }
 
     /*move pices*/
@@ -273,23 +285,25 @@ pices = Pices.create(1); //_random
             ,before = getPicesCopy( pices )
             ;
 
-        dx = _max( 0, _min( x + dx, cols - width ) );
-        // there is no move...
-        if(x == dx ) return;
+//        dx = _max( 0, _min( x + dx, cols - width ) );
+        dx =  x + dx;
+        // there is need no move...
+//        if(x == dx ) return;
 
-        for( ; s<0? x>dx : x<dx  ;x+=s ){
-            boardMap = getMap( x+1, y, width, height);
+        for( ; s<0 ? x>dx : x<dx  ;x+=s ){
+            boardMap = getMap( x + s, y, width, height);
             if( isFreeCollision( boardMap, picesMap, width, height ) ){
                 pices.x+=s;
+                pices.ox = pices.x;
             }
         }
 
         events && events.push({
             type:'move',
-            data:[{
+            data:{
                 before: before,
                 after: getPicesCopy( pices )
-            }]
+            }
         });
     }
 
@@ -304,22 +318,23 @@ pices = Pices.create(1); //_random
             x = pices.x,
             y = pices.y,
             boardMap,
-            before = getPicesCopy( pices),
-            endBoard = rows - height
+            before = getPicesCopy( pices)
+            ,endBoard = rows - height
             ;
 //        dy = Math.min( y + dy , rows - height );
         dy = y+dy;
         for(  ; y < dy ; y++ ){
             boardMap = getMap( x, y+1, width, height);
-            if( isFreeCollision( boardMap, picesMap, width, height ) && y < endBoard ){
+            if( isFreeCollision( boardMap, picesMap, width, height ) /*&& y < endBoard*/ ){
                 pices.y++
+                pices.oy = pices.y;
             }else{
                 events && events.push({
                     type:'move',
-                    data:[{
+                    data:{
                         before: before,
                         after :  getPicesCopy( pices )
-                    }]
+                    }
                 });
                 return false; // blocked in the way or out board
             }
@@ -328,29 +343,40 @@ pices = Pices.create(1); //_random
     }
 
     function rotatePices( pices, r, events ){
-        var width, height, boardMap;
-        var x,y;
-
-        var data = {
-            before: getPicesCopy( pices)
-        };
-
         pices.rotate( r );
-        width = pices.width;
-        height = pices.height;
-        x = pices.x;
-        y = pices.y;
-        boardMap = getMap( x, y, width, height);
-        if( !isFreeCollision( boardMap, pices.map, width, height ) ){
+        var width = pices.width,
+            height = pices.height,
+            yt = [0,-1,1],
+            xt = [0,-1,1],
+            before =  getPicesCopy( pices),
+            picesMap = pices.map,
+            status,
+            boardMap
+        ;
+        pices.x = pices.ox || pices.x;
+        pices.y = pices.oy || pices.y;
+        status = yt.some(function(dy){
+            return xt.some(function (dx) { //one need to success for finish iteration
+                    boardMap = getMap( pices.x + dx, pices.y + dy, width, height);
+                    if( isFreeCollision( boardMap, picesMap, width, height )  ){
+                        pices.x += dx;
+                        pices.y += dy;
+                        events.push({
+                            type:'rotate',
+                            data:{
+                                before: before,
+                                after:  getPicesCopy( pices )
+                            }
+                        });
+                        return true;
+                    }
+                })
+        });
+
+        if( !status ){
             pices.rotate( -r );
             return false; // blocked in the way
         }
-
-        data.after = getPicesCopy( pices);
-        events.push({
-            type:'rotate',
-            data:[data]
-        });
         return true;
     }
 

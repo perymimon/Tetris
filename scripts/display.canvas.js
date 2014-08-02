@@ -1,15 +1,12 @@
 /**
  * Created by pery on 04/07/14.
  */
-system.register(function display( game, dom, $, settings ) {
+system.register(function display( game, dom, $, settings, effects, animations ) {
     var canvas,ctx
         ,cols, rows
         ,cubeSize
         ,firstRun = true
-        ,activePicesX, activePicesY
-        ,activePicesTargetX, activePicesTargetY
         ,previousCycle
-        ,animations = []
         ,paused
 
     ;
@@ -27,45 +24,16 @@ system.register(function display( game, dom, $, settings ) {
         var background = document.createElement('canvas');
         var bgctx = background.getContext('2d');
 
-        dom.addClass( background, 'background');
+        dom.addClass( background, 'background board-bg');
         background.width = Math.max(cols,rows) * cubeSize ;
         background.height = Math.max(cols,rows) * cubeSize;
         bgctx.scale( cubeSize, cubeSize );
 
         /*border*/
-        bgctx.save();
-
-        bgctx.lineWidth = '.5';
-        bgctx.fillStyle = 'rgba(255,255,255,0.6)';
-        bgctx.beginPath();
-        bgctx.moveTo(0,0);
-        bgctx.lineTo(0, rows );
-        bgctx.lineTo( cols, rows );
-        bgctx.lineTo(cols,0);
-        bgctx.fill();
-//        bgctx.stroke();
-        bgctx.restore();
-
-
-        bgctx.save();
-        bgctx.strokeStyle = 'rgba(20,20,20,0.4)';
         bgctx.lineWidth = '.15';
-
-        for( var x=1; x < cols; x++){
-            bgctx.beginPath();
-            bgctx.moveTo(x,0);
-            bgctx.lineTo(x,rows);
-            bgctx.stroke();
-        }
-        for( var y=1; y < rows; y++){
-            bgctx.beginPath();
-            bgctx.moveTo(0,y);
-            bgctx.lineTo(cols,y);
-            bgctx.stroke();
-        }
-        bgctx.strokeRect(12,2,5,5);
-
-        bgctx.restore();
+        bgctx.fillStyle = 'rgba(255,255,255,0.6)';
+        drawMainBoardBackGround( bgctx );
+        drawNextBackGround( bgctx , 12, 2);
 //        for( var x=0; x<cols; x++){
 //
 //            for( var y=0; y<rows; y++){
@@ -82,10 +50,60 @@ system.register(function display( game, dom, $, settings ) {
         return background;
     }
 
+    function drawNextBackGround( bgctx, xs, ys ){
+        bgctx.save();
+        var width = 5;
+        var height = 5;
+        bgctx.fillRect( xs, ys, width, height);
+        bgctx.strokeRect( xs, ys, width, height);
+        bgctx.strokeStyle = 'rgba(20,20,20,0.4)';
+        bgctx.lineWidth = '.15';
+        bgctx.beginPath();
+        for( var x=1; x < width; x++){
+            bgctx.moveTo( xs + x, ys );
+            bgctx.lineTo( xs + x, ys + height );
+        }
+        for( var y=1; y < height; y++ ){
+            bgctx.moveTo( xs , ys + y );
+            bgctx.lineTo( xs + width, ys + y );
+        }
+        bgctx.stroke();
+
+    }
+    function drawMainBoardBackGround( bgctx ){
+        bgctx.save();
+
+
+        bgctx.beginPath();
+        bgctx.moveTo( 0, 0 );
+        bgctx.lineTo( 0, rows );
+        bgctx.lineTo( cols, rows );
+        bgctx.lineTo( cols, 0 );
+        bgctx.fill();
+//        bgctx.stroke();
+        bgctx.restore();
+
+        bgctx.save();
+        bgctx.strokeStyle = 'rgba(20,20,20,0.4)';
+        bgctx.lineWidth = '.15';
+
+//        main board
+        bgctx.beginPath();
+        for( var x=1; x < cols; x++){
+            bgctx.moveTo(x,0);
+            bgctx.lineTo(x,rows);
+        }
+        for( var y=1; y < rows; y++){
+            bgctx.moveTo(0,y);
+            bgctx.lineTo(cols,y);
+        }
+        bgctx.stroke();
+        bgctx.restore();
+    }
+
 
 
     function setup(){
-
         var boardElement = $('#game-screen .game-board' )[0];
         cols = settings.cols;
         rows = settings.rows;
@@ -104,17 +122,9 @@ system.register(function display( game, dom, $, settings ) {
         boardElement.appendChild( createBackground() );
         boardElement.appendChild( canvas );
 
-        previousCycle = Date.now();
-        requestAnimationFrame(cycle);
-
     }
 
-
-
-
     function moveActivePices( e, next ){
-        e = e[0]; // just one for now;
-
 //        var velocity = 1; // cube per secound
         clearPices( e.before, e.before.x,  e.before.y );
         drawPices( e.after, e.after.x, e.after.y );
@@ -152,7 +162,6 @@ system.register(function display( game, dom, $, settings ) {
     };
 
     function rotateActivePices(e, next){
-        e = e[0]; // just one for now;
         clearPices( e.before, e.before.x,  e.before.y );
         drawPices( e.after, e.after.x, e.after.y );
         next();
@@ -160,14 +169,36 @@ system.register(function display( game, dom, $, settings ) {
 
     function removeRows( removed, next ){
 
-        for(var i= 0 ; i< removed.length; i++){
+        var n = removed.length;
+          removed.forEach(function (data, i) {
+              var y = data.from;
+              var imageData =  ctx.getImageData( 0, y * cubeSize, cubeSize * cols, cubeSize );
+              var burnFX = effects.burn(ctx, imageData, i);
+              animations.addCustom( function(){
+                  return burnFX.done;
+                },{
+                  render:function(){
+                      ctx.putImageData(burnFX.next(),0, y * cubeSize);
+                  },
+                  done: function () {
+                      console.log('effect done');
+                      if( --n <=0 ){
+                          next();
+                      }
+
+                  }
+              })
+
+          });
+
+     /*   for(var i= 0 ; i< removed.length; i++){
             var y = removed[i].from;
             var row = removed[i].row;
             for(var x= 0 ; x< row.length; x++){
                 clearPicesCube( x, y );
             }
         }
-        next();
+        next();*/
     }
 
     function movedRow ( moved, next ){
@@ -291,21 +322,6 @@ system.register(function display( game, dom, $, settings ) {
     }
 
 
-
-
-
-    function pause(){
-        paused = true;
-    }
-
-    function resume( pauseTime ){
-
-       paused = false;
-       for( var i=0; i<animations.length; i++ ){
-           animations[i].startTime +=pauseTime;
-       }
-    }
-
     function printPices ( pices ){
         var str = "\n\r";
         var rows = pices.width;
@@ -318,54 +334,6 @@ system.register(function display( game, dom, $, settings ) {
         }
 
         console.log(str);
-    }
-
-    function renderAnimations( time, lastTime){
-        var anims = animations.slice(0), //copy list
-            n = anims.length,
-            animTime,
-            anim,
-            i
-            ;
-
-        // call before() function
-        for(i=0; i<n; i++){
-            anim = anims[i];
-            // last position that used
-            anim.fncs.before && anim.fncs.before(anim.pos);
-            anim.lastPos = anim.pos;
-            if( typeof anim.runTime == 'function' ){
-                anim.pos = -1;
-            }else{
-                // generate new position
-                animTime = (lastTime - anim.startTime);
-                anim.pos = animTime / anim.runTime;
-                anim.pos = Math.max(0, Math.min(1,anim.pos));
-            }
-        }
-        animations = [];
-        for( i = 0; i<n; i++){
-            anim = anims[i];
-            anim.fncs.render( anim.pos, anim.pos - anim.lastPos );
-            if( anim.pos == 1){
-                anim.fncs.done && anim.fncs.done();
-            }else{
-                animations.push(anim);
-            }
-
-        }
-    }
-    function cycle(){
-        var time = Date.now();
-        if( !paused ){
-            // hide cursor while animation
-//            if(animations.length === 0){
-//                renderCursor( time );
-//            }
-            renderAnimations(time, previousCycle);
-        }
-        previousCycle = time;
-        requestAnimationFrame(cycle);
     }
 
     function drawPices( pices, dx, dy, scale, rot ){
@@ -426,7 +394,7 @@ system.register(function display( game, dom, $, settings ) {
             ,colors = settings.color
             ,color
             ;
-        ctx.clearRect(0,0, cols, rows );
+        ctx.clearRect( 0, 0, cols, rows );
 
         for( x = 0; x < cols; x++){
             for(y=0; y < rows; y++){
@@ -440,8 +408,11 @@ system.register(function display( game, dom, $, settings ) {
         }
         // print Next
         var next = picesQueue[1];
-        var dx = 13, dy = 3;
         ctx.clearRect( 12, 2, 5, 5 );
+
+        var dx = 12 + (5-next.width) / 2,
+            dy = 2 + (5-next.height) / 2
+            ;
         drawPices(next, dx, dy);
 
         // print Active
@@ -451,20 +422,10 @@ system.register(function display( game, dom, $, settings ) {
         callback && callback();
     }
 
-    function addAnimation( runTime, fncs){
-        var anim = {
-            runTime : runTime,
-            startTime : Date.now(),
-            pos:0,
-            fncs: fncs
-        };
-        animations.push(anim);
-
-        return anim;
-    }
 
 
 
+    /* API */
     return {
         initialize: initialize,
         redraw: redraw,
@@ -479,6 +440,14 @@ system.register(function display( game, dom, $, settings ) {
         resume: resume,
 //        levelUp: levelUp,
         gameOver: gameOver
+    }
+
+    function pause(){
+        animations.pause();
+    }
+
+    function resume(){
+        animations.resume();
     }
 
 });

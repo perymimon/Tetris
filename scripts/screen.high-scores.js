@@ -1,20 +1,18 @@
 /**
  * Created by pery on 18/07/14.
  */
-jewel.screens['high-scores'] = (function () {
+system.register(function high_scores( $, dom, game, storage ){
+
     var firstRun = true
         ,STORAGE_KEY_LAST_SCORE = 'lastScore'
         ,STORAGE_KEY_SCORES = 'scores'
-        , $
         ;
 
     function setup(){
-         $ = jewel.dom.$;
-
         var backbutton = $('#high-scores button[name=back]')[0]
         ;
-        jewel.dom.bind(backbutton,'click',function(){
-            jewel.showScreen('main-menu');
+        dom.bind(backbutton,'click',function(){
+            game.showScreen('main-menu');
         })
     }
 
@@ -24,31 +22,31 @@ jewel.screens['high-scores'] = (function () {
             firstRun = false;
         }
         populateList();
-        var score = jewel.storage.get(STORAGE_KEY_LAST_SCORE);
+        var score = storage.get(STORAGE_KEY_LAST_SCORE);
         if(score){
-            checkScores(score);
-            jewel.storage.set(STORAGE_KEY_LAST_SCORE,null);
+            checkScores( score );
+            storage.set(STORAGE_KEY_LAST_SCORE,null);
         }
     }
 
     var numScores = 10;
 
     function getScores(){
-        return jewel.storage.get(STORAGE_KEY_SCORES) || [];
+        return storage.get( STORAGE_KEY_SCORES ) || [];
     }
 
-    function addScore( score, position){
+    function addScore( score, position ){
         var scores = getScores(),
             name,entry
         ;
 
-        name = prompt('please enter your name:');
+        name = prompt('please enter your name:'); // make some buty UI
         entry = {
             name: name
             ,score : score
         };
         scores.splice( position, 0, entry);
-        jewel.storage.set(STORAGE_KEY_SCORES, scores.slice(0,numScores));
+        storage.set(STORAGE_KEY_SCORES, scores.slice(0,numScores));
         populateList();
 
     }
@@ -97,9 +95,12 @@ jewel.screens['high-scores'] = (function () {
 
 
     }
+    game.addScreen('high-scores',{
+        run: run
+    });
 
     return {
         run:run
     }
 
-})();
+});
