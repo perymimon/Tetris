@@ -29,7 +29,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
         gameState = {
             level : 0,
             score : 0,
-            tickTime: 2000
+            tickTime: 500
         };
 
         if( newGame ){
@@ -49,6 +49,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
             display.initialize(function () {
                 display.redraw(board.getBoard(),board.getPicesQueue(), function () {
                     tick();
+                    advanceLevel();
                 })
             })
         });
@@ -76,19 +77,16 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
 
     function tick(){
         if( paused ) return;
+        var thisfunc = arguments.callee;
+        moveDown();
 
-//        board.moveActivePicesDown( 1, playBoardEvents );
-
-        setTimeout( tick, gameState.tickTime );
-
-
+        thisfunc.timer = setTimeout( tick, gameState.tickTime );
     }
 
     function playBoardEvents( events ){
         // just in the firstTime
         // because the recursion i don't now if this is the firs time
         if(!events.notFirstTimeRun ){
-
             saveGameData();
             events.notFirstTimeRun = true;
         }
@@ -111,7 +109,8 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
                     break;
                 case 'gameOver':
                     audio.play('gameOver');
-                    game.showScreen('high-scores');
+                    gameOver();
+
                     break;
                 case 'refill':
                     announce('No moves!');
@@ -155,7 +154,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
 
     }
     function moveDown(){
-
+        board.moveActivePicesDown( 1, playBoardEvents );
     }
     function moveLeft(){
         board.moveActivePicesSibling( -1, playBoardEvents );
@@ -173,6 +172,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     function updateGameInfo(){
         $('#game-screen .score span')[0].innerHTML = gameState.score;
         $('#game-screen .level span')[0].innerHTML = gameState.level;
+        $('#game-screen .nextLevel span')[0].innerHTML = gameState.nextLevelAt;
     }
 
 
@@ -189,7 +189,7 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
         $pauseOverlay.style.display = 'block';
         paused = true;
         pauseStart = Date.now();
-        clearTimeout( gameState.timer );
+        clearTimeout( tick.timer );
         gameState.timer = 0;
         display.pause();
     }
@@ -205,12 +205,9 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     }
 
     function addScore( points ){
-        var  nextLevelAt = Math.pow(
-                settings.baseLevelScore,
-                Math.pow( settings.baseLevelExp, gameState.level-1)
-            );
+
         gameState.score += points;
-        if( gameState.score >= nextLevelAt ){
+        if( gameState.score >= gameState.nextLevelAt ){
             advanceLevel();
         }else{
             updateGameInfo();
@@ -218,12 +215,18 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     }
 
     function advanceLevel(){
+        gameState.nextLevelAt = ~~Math.pow(
+            settings.baseLevelScore,
+            Math.pow( settings.baseLevelExp, gameState.level-1)
+        );
         audio.play('levelUp');
         gameState.level++;
         announce('Level ' + gameState.level );
+        var level = gameState.level;
+        gameState.tickTime = settings.baseLevelTickTime * Math.pow( level, -0.05 * level );
         updateGameInfo();
-        setLevelTimer( true );
         display.levelUp();
+
     }
 
     function announce( str ){
@@ -237,6 +240,9 @@ system.register(function game_screen( game, board, display, dom, $, audio, stora
     }
 
     function gameOver(){
+        clearTimeout( tick.timer );
+        tick.timer = 0;
+        paused = true;
         audio.play(STORAGE_KEY_GAME_STATE,'gameover');
         storage.set(STORAGE_KEY_GAME_STATE,null);
         storage.set(STORAGE_KEY_LAST_SCORE, gameState.score);

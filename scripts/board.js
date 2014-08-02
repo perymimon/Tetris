@@ -7,7 +7,6 @@ system.register(function board( settings ,Pices) {
         ,cols = settings.cols
         ,rows = settings.rows
         ,numPicesType = settings.numJewelTypes
-        ,baseScore = settings.baseScore
         ,EMPTY_SPACE = 0
         ,OUT_BOARD = 100
         ,picesQueue =[]
@@ -46,37 +45,37 @@ system.register(function board( settings ,Pices) {
             }
         }
 
-        var pices =  Pices.create(1);
-        pices.rotate(0);
-        pices.x = 0;
-        pices.y = 18;
-        addPicesToBoard( pices );
-        pices.rotate(0);
-        pices.x = 4;
-        pices.y =18;
-        addPicesToBoard( pices );
-        pices.rotate(0);
-        pices.x = 0;
-        pices.y = 17;
-        addPicesToBoard( pices );
-        pices.rotate(0);
-        pices.x = 4;
-        pices.y =17;
-        addPicesToBoard( pices );
-        pices.rotate(1);
-        pices.x = 7;
-        pices.y = 16;
-        addPicesToBoard( pices );
+//        var pices =  Pices.create(1);
+//        pices.rotate(0);
+//        pices.x = 0;
+//        pices.y = 18;
+//        addPicesToBoard( pices );
+//        pices.rotate(0);
+//        pices.x = 4;
+//        pices.y =18;
+//        addPicesToBoard( pices );
+//        pices.rotate(0);
+//        pices.x = 0;
+//        pices.y = 17;
+//        addPicesToBoard( pices );
+//        pices.rotate(0);
+//        pices.x = 4;
+//        pices.y =17;
+//        addPicesToBoard( pices );
+//        pices.rotate(1);
+//        pices.x = 7;
+//        pices.y = 16;
+//        addPicesToBoard( pices );
 
 
-//        while( level-- ){
-//            var pices = Pices.create(); //_random
-//            pices.rotate( ~~ ( _random() * 4 ) );
-//            pices.x = ~~ ( _random() * (cols-1-pices.width) );
-//            movePicesDown( pices, rows );
-//
-//            addPicesToBoard( pices );
-//        }
+        while( level-- ){
+            var pices = Pices.create(); //_random
+            pices.rotate( ~~ ( _random() * 4 ) );
+            pices.x = ~~ ( _random() * (cols-1-pices.width) );
+            movePicesDown( pices, rows );
+
+            addPicesToBoard( pices );
+        }
 // try again if new board has stacked already
         if( isGameEnd() ){
             fillBoard();
@@ -246,7 +245,7 @@ system.register(function board( settings ,Pices) {
                     from:y
                 });
                 removedRow( y );
-                score += baseScore * gaps;
+                score += settings.baseScore * gaps;
             }else if( gaps ){
                 moved.push({
                     row: row,

@@ -14,4 +14,12 @@
          url("../fonts/Geo-Regular.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: "napkin";
+    font-style: normal;
+    font-weight: normal;
+    src:
+         url("../fonts/mf_hostun/Mf_Houston_Paris_Budapest.ttf") format("truetype");
+}
+
 

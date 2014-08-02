@@ -1,0 +1,7 @@
+﻿/* @font-face kit by Fonts2u (http://www.fonts2u.com) */
+@font-face {
+    font-family: "tetris Regular";
+    src: url("tetris.eot?") format("eot"), url("tetris.woff") format("woff"), url("tetris.ttf") format("truetype"), url("tetris.svg#tetris") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}

@@ -123,7 +123,7 @@ system.register(function animations(){
         requestAnimationFrame(cycle);
     }
 
-    function paused(){
+    function pause(){
         paused = true;
     }
 
@@ -141,7 +141,7 @@ return {
     addFixedTime:addFixedTimeAnimation,
     addCustom:addCustomAnimation,
     addFromTo:addFromToAnimation,
-    paused: paused,
+    pause: pause,
     resume:resume
 }
 
